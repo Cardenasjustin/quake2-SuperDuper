@@ -3,6 +3,8 @@
 #include "g_local.h"
 #include "m_player.h"
 
+void ShowHelpMessageDelayed(edict_t* ent);
+
 void SelectNextItem(edict_t *ent, item_flags_t itflags, bool menu = true)
 {
 	gclient_t *cl;
@@ -456,6 +458,7 @@ void ActivateClassAbility(edict_t* ent)
 	}
 	ent->client->ability_cooldown_end_time = level.time + 15_sec;
 }
+
 void Cmd_SetPOI_f(edict_t *self)
 {
 	if (!G_CheatCheck(self))
@@ -1756,10 +1759,26 @@ static void Cmd_ListMonsters_f(edict_t *ent)
 ClientCommand
 =================
 */
+void Cmd_HelpMenu_f(edict_t* ent)
+{
+	gi.WriteByte(svc_centerprint);
+	gi.WriteString(
+		"====================================\n"
+		"Welcome to SuperDuper Mod!\n\n"
+		"Press C to open class menu\n"
+		"Press 1-5 to select class\n"
+		"Press F to use your class ability\n"
+		"Each ability has a 15s cooldown\n\n"
+		"Good luck!\n"
+		"====================================\n");
+	gi.unicast(ent, true);
+}
+
 
 void ClientCommand(edict_t *ent)
 {
 	const char* cmd = gi.argv(0);
+
 
 	// Handle class menu toggle
 	if (_stricmp(cmd, "classmenu") == 0)
@@ -1940,6 +1959,11 @@ void ClientCommand(edict_t *ent)
 		CTFPlayerList(ent);
 	else if (Q_strcasecmp(cmd, "observer") == 0)
 		CTFObserver(ent);
+	else if (Q_strcasecmp(cmd, "showhelp") == 0)
+	{
+		Cmd_HelpMenu_f(ent);
+	}
+
 	// ZOID
 	else if (Q_strcasecmp(cmd, "switchteam") == 0)
 		Cmd_Switchteam_f(ent);

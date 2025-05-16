@@ -2022,7 +2022,6 @@ Called when a player connects to a server or respawns in
 a deathmatch.
 ============
 */
-
 void PutClientInServer(edict_t *ent)
 {
 	int					index;
@@ -2347,6 +2346,7 @@ void PutClientInServer(edict_t *ent)
 		G_PostRespawn(ent);
 
 	ent->client->next_item_spawn_time = level.time + 1_sec;
+
 }
 
 /*
